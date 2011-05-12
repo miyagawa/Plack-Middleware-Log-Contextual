@@ -22,11 +22,6 @@ sub call {
         }
     }
 
-    # This means the streaming interface doesn't work, but i couldn't
-    # figure out how to do this without the risk of mixing up the
-    # logger object per request, since Log::Contextual's logger
-    # retrieval is based on the caller().
-
     my $res;
     with_logger $logger, sub { $res = $self->app->($env) };
 
