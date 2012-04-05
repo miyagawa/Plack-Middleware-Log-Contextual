@@ -124,6 +124,15 @@ maximum) level in the logger, you should configure the minimum
 C<level> in the middleware configuration as shown above. It defaults
 to C<debug>.
 
+Note that the L<specifications for C<psgix.logger>|PSGI::Extensions> state that
+the supported levels are ONLY debug, info, warn, error and fatal. If your
+application emits messages at different levels than these, it is recommended
+that you pass the logger object directly to this middleware, to bypass the
+C<psgix.logger> coderef (see L</"Standalone mode">), or limit your use of log
+levels to those that overlap (for example for L<Log::Dispatch>, only emit
+messages with the levels debug, info, warn and error, avoiding notice,
+critical, alert and emergency).
+
 =head1 AUTHOR
 
 Tatsuhiko Miyagawa E<lt>miyagawa@bulknews.netE<gt>
@@ -139,6 +148,6 @@ it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Log::Contextual> L<Plack>
+L<Log::Contextual> L<Plack> L<PSGI::Extensions>
 
 =cut
