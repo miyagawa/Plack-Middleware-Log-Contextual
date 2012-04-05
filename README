@@ -32,7 +32,7 @@ SYNOPSIS
 DESCRIPTION
     Plack::Middleware::Log::Contextual is a PSGI middleware component that
     integrates Log::Contextual with your application. It works as a
-    standalone and could also be used in combination with PSGI logger
+    standalone and could also be used in combination with a PSGI logger
     framework.
 
 CONFIGURATION
@@ -54,7 +54,7 @@ CONFIGURATION
 
   PSGI logger mode
     This middleware also works with the middleware components that support
-    "psgix.logger" extention, such as Plack::Middleware::SimpleLogger,
+    "psgix.logger" extension, such as Plack::Middleware::SimpleLogger,
     Plack::Middleware::LogDispatch or Plack::Middleware::ConsoleLogger.
 
       use Plack::Builder;
@@ -65,11 +65,21 @@ CONFIGURATION
           $psgi_app;
       };
 
-    Note that the PSGI logger should be applied before this middleware.
+    Note that the PSGI logger should be applied before this middleware
+    ("psgix.logger" is set by the other middleware, and used by this one).
 
     Unlike the standalone mode where you configure the minimum (and maximum)
     level in the logger, you should configure the minimum "level" in the
-    middleware configuration like seen above. It defaults to "debug".
+    middleware configuration as shown above. It defaults to "debug".
+
+    Note that the specifications for "psgix.logger" state that the supported
+    levels are ONLY debug, info, warn, error and fatal. If your application
+    emits messages at different levels than these, it is recommended that
+    you pass the logger object directly to this middleware, to bypass the
+    "psgix.logger" coderef (see "Standalone mode"), or limit your use of log
+    levels to those that overlap (for example for Log::Dispatch, only emit
+    messages with the levels debug, info, warn and error, avoiding notice,
+    critical, alert and emergency).
 
 AUTHOR
     Tatsuhiko Miyagawa <miyagawa@bulknews.net>
@@ -82,5 +92,5 @@ LICENSE
     under the same terms as Perl itself.
 
 SEE ALSO
-    Log::Contextual Plack
+    Log::Contextual Plack PSGI::Extensions
 

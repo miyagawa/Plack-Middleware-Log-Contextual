@@ -80,7 +80,7 @@ Plack::Middleware::Log::Contextual - integrate Log::Contextual with Plack/PSGI l
 
 Plack::Middleware::Log::Contextual is a PSGI middleware component that
 integrates L<Log::Contextual> with your application. It works as a
-standalone and could also be used in combination with PSGI logger
+standalone and could also be used in combination with a PSGI logger
 framework.
 
 =head1 CONFIGURATION
@@ -105,7 +105,7 @@ calls get propagated to the logger object you configured.
 =head2 PSGI logger mode
 
 This middleware also works with the middleware components that support
-C<psgix.logger> extention, such as L<Plack::Middleware::SimpleLogger>,
+C<psgix.logger> extension, such as L<Plack::Middleware::SimpleLogger>,
 L<Plack::Middleware::LogDispatch> or L<Plack::Middleware::ConsoleLogger>.
 
   use Plack::Builder;
@@ -116,12 +116,22 @@ L<Plack::Middleware::LogDispatch> or L<Plack::Middleware::ConsoleLogger>.
       $psgi_app;
   };
 
-Note that the PSGI logger should be applied B<before> this middleware.
+Note that the PSGI logger should be applied B<before> this middleware
+(C<psgix.logger> is set by the other middleware, and used by this one).
 
 Unlike the standalone mode where you configure the minimum (and
 maximum) level in the logger, you should configure the minimum
-C<level> in the middleware configuration like seen above. It defaults
+C<level> in the middleware configuration as shown above. It defaults
 to C<debug>.
+
+Note that the L<specifications for C<psgix.logger>|PSGI::Extensions> state that
+the supported levels are ONLY debug, info, warn, error and fatal. If your
+application emits messages at different levels than these, it is recommended
+that you pass the logger object directly to this middleware, to bypass the
+C<psgix.logger> coderef (see L</"Standalone mode">), or limit your use of log
+levels to those that overlap (for example for L<Log::Dispatch>, only emit
+messages with the levels debug, info, warn and error, avoiding notice,
+critical, alert and emergency).
 
 =head1 AUTHOR
 
@@ -138,6 +148,6 @@ it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Log::Contextual> L<Plack>
+L<Log::Contextual> L<Plack> L<PSGI::Extensions>
 
 =cut
